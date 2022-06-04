@@ -1,0 +1,1 @@
+CSV file with joint latent representation from scMVP will be automatically saved here. 
