@@ -1,4 +1,3 @@
-
 library(dplyr)
 library(ggplot2)
 library(umap)
@@ -9,6 +8,11 @@ library(grid)
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta")
 csv.files = list.files(path = "/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta", pattern = "csv$", full.names = TRUE)
+
+firstup <- function(x) {
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
+}
 
 for (csv.file in csv.files){
   df <- read.csv(csv.file, row.names=1)
@@ -66,9 +70,9 @@ for (csv.file in csv.files){
       ggplot2::geom_point(alpha = 0.4, size=pointsize, shape=16)+
       ggplot2::labs(x = "UMAP1",
                     y = "UMAP2",
-                    title = gsub("_", " ", colname)) +
-      ggplot2::theme_minimal() +
-      ggplot2::theme(legend.title=element_blank()) 
+                    title = firstup(gsub("_", " ", colname))) +
+      ggplot2::theme_bw() +
+      ggplot2::theme(legend.title=element_blank(), plot.title = element_text(face="bold")) 
     
     if (!is.numeric(umap_df[[colname]])){
       gg <- gg + guides(color = guide_legend(override.aes = list(size=3)))
@@ -82,9 +86,10 @@ for (csv.file in csv.files){
   }, umap_df=umap_df, cellNumber=cellNumber)
   
   ggplotsAndLegends <- unlist(ggplotsAndLegends, recursive = FALSE)
-  ggplots.arranged <- gridExtra::grid.arrange(grobs = ggplotsAndLegends,  ncol = 2,  widths = c(2,2), 
-                                              top = grid::textGrob(paste0(dataType, ", ", tool, ", Number of cells: ", cellNumber, ", Replicate: ", replicate), 
-                                                                   gp=grid::gpar(fontsize=15,font=2)))
+  ggplots.arranged <- gridExtra::grid.arrange(grobs = ggplotsAndLegends,  ncol = 2,  widths = c(2,2) 
+                                              #top = grid::textGrob(paste0(dataType, ", ", tool, ", Number of cells: ", cellNumber, ", Replicate: ", replicate), 
+                                              #                     gp=grid::gpar(fontsize=15,font=2))
+                                              )
   ggsave(paste0("umap_", sub(".csv", "", basename(csv.file)), ".pdf"), ggplots.arranged,
          width =15, height = 35)
 }
