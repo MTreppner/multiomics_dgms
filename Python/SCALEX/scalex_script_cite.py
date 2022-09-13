@@ -25,12 +25,17 @@ import numpy as np
 # import scipy as sp
 
 from timeit import default_timer as timer
+from time import process_time
+
+import random
 
 def run_scalex(substr):
     print(substr)
     
     adata_gex = ad.read_h5ad("adata_cite_gex_" + substr)
     adata_protein = ad.read_h5ad("adata_cite_protein_" + substr)
+    
+    randint = random.randint(0,10000)
 
     # RNA adata preprocess
     sc.pp.normalize_per_cell(adata_gex, counts_per_cell_after=1e4)
@@ -57,11 +62,12 @@ def run_scalex(substr):
     norm_full_data.var_names_make_unique()
     
     norm_full_data.obs_names = adata_protein.obs_names
-    norm_full_data.write('scalex_CITE_' + substr.replace(".h5ad", "") + '.h5ad')
+    norm_full_data.write('scalex_CITE_' + substr.replace(".h5ad", "") + '.h5ad') 
     
-    
+    del adata_gex, adata_protein
     
     start = timer()
+    t0 = process_time() 
         
     # SCALEX Integration
     adata_scalex=SCALEX('scalex_CITE_' + substr.replace(".h5ad", "") + '.h5ad',
@@ -75,22 +81,33 @@ def run_scalex(substr):
                         # max_iteration=100, Default: 30000 , processing time decreases if decreasing this value
                         ignore_umap = False,
                         verbose = True,
-                        processed=True)
+                        processed=True,
+                        seed = randint)
     
+
     latent = adata_scalex.obsm['latent']
-    
-    end = timer()
-    
-    
     
     df = pd.DataFrame(latent, index=adata_scalex.obsm.dim_names)
     
     df.to_csv('scalex_latent_cite_' + substr.replace(".h5ad", "") + '.csv')  
     
+    t1 = process_time()
+    end = timer()
+    
     extime = end - start
-    f = open("scalex_executionTimes_cite.txt", "a")
+    f = open("scalex_cite_clockTimes.txt", "a")
     f.write(substr.replace(".h5ad", "") + ": " +  str(extime) + "\n")
     f.close()
+    
+    f = open("scalex_cite_CPUTimes.txt", "a")
+    f.write(substr.replace(".h5ad", "") + ": " +  str(t1 - t0) + "\n")
+    f.close()
+    
+    f_seed = open("scalex_cite_seeds.txt", "a")
+    f_seed.write(substr.replace(".h5ad", "") + ": " + str(randint) + "\n")
+    f_seed.close()
+    
+    del adata_scalex
 
 
 if __name__ == '__main__':

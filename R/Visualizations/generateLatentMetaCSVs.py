@@ -59,9 +59,18 @@ def attachLatentToAdataObject(combined_dat, dataType, replicate, tool, cellNumbe
     # first %s stand for model name, second for number of cells, third for repetition
     
     if dataType == "Multiome":
-        embedding = pd.read_csv("Desktop/%s/csv/latent_subsample_%s_cells_rep_%s.csv" % (tool, cellNumber, replicate), index_col=0) 
+        if tool in ["portal", "DAVAE"]:
+            csv_path = "csv_avg"
+        else:
+            csv_path = "csv"
+            
+        embedding = pd.read_csv("Desktop/JointEmbeddings/%s/%s/latent_subsample_%s_cells_rep_%s.csv" % (tool, csv_path, cellNumber, replicate), index_col=0) 
     elif dataType == "CITE":
-        embedding = pd.read_csv("Desktop/%s/csv_cite/latent_cite_subsample_%s_cells_rep_%s.csv" % (tool, cellNumber, replicate), index_col=0) 
+        if tool == "SCALEX":
+            addStr = "scalex_"
+        else:
+            addStr = ""
+        embedding = pd.read_csv("Desktop/JointEmbeddings/%s/csv_cite/%slatent_cite_subsample_%s_cells_rep_%s.csv" % (tool, addStr, cellNumber, replicate), index_col=0) 
 
     embedding = embedding[["0","1","2","3","4","5","6","7","8","9"]]
     embedding.index = embedding.index.str.replace(r'CITE~|Multiome~', '')
@@ -82,11 +91,11 @@ def attachLatentToAdataObject(combined_dat, dataType, replicate, tool, cellNumbe
     return latent_with_meta
     
     
-dataTypes = ["Multiome", "CITE"]   
+dataTypes = ["CITE", "Multiome"]   
 replicate = 1
 cellNumbers = [500,1000,2500,5000,10000]
 toolsCITE = ["Cobolt", "scMM", "totalvi", "SCALEX"]
-toolsMultiome = ["Cobolt", "scMM", "multivi", "scMVP"]
+toolsMultiome = ["Cobolt", "scMM", "multivi", "scMVP", "DAVAE", "portal"]
 
 
 for dataType in dataTypes:

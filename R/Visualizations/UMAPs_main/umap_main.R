@@ -13,10 +13,10 @@ gg_color_hue <- function(n) {
 }
 
 getColors <- function(){
-  multiome500 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta/dataType_Multiome_tool_Cobolt_cellNumber_500_replicate_1.csv"), row.names=1)
-  multiome10000 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta/dataType_Multiome_tool_Cobolt_cellNumber_10000_replicate_1.csv"), row.names=1)
-  CITE500 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta/dataType_CITE_tool_Cobolt_cellNumber_500_replicate_1.csv"), row.names=1)
-  CITE10000 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta/dataType_CITE_tool_Cobolt_cellNumber_10000_replicate_1.csv"), row.names=1)
+  multiome500 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta/dataType_Multiome_tool_Cobolt_cellNumber_500_replicate_1.csv"), row.names=1)
+  multiome10000 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta/dataType_Multiome_tool_Cobolt_cellNumber_10000_replicate_1.csv"), row.names=1)
+  CITE500 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta/dataType_CITE_tool_Cobolt_cellNumber_500_replicate_1.csv"), row.names=1)
+  CITE10000 <- read.csv(paste0("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta/dataType_CITE_tool_Cobolt_cellNumber_10000_replicate_1.csv"), row.names=1)
   uniqueCells <- sort(unique(c(multiome500$cell_type, multiome10000$cell_type, CITE500$cell_type, CITE10000$cell_type)))
   
   cols = gg_color_hue(length(uniqueCells))
@@ -91,7 +91,7 @@ getGGplotPlusLegend <- function(csv.file, pointsize) {
 
 
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-setwd("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta")
+setwd("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta")
 #csv.files = list.files(path = "/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta", pattern = "csv$", full.names = TRUE)
 
 toolsCITE <- c("Cobolt", "scMM", "totalvi", "SCALEX")
@@ -102,14 +102,14 @@ for (dataType in dataTypes){
   if (dataType == "CITE"){
     tools <- c("Cobolt", "scMM", "totalvi", "SCALEX")
   } else if (dataType == "Multiome"){
-    tools <- c("Cobolt", "scMM", "multivi", "scMVP")
+    tools <- c("Cobolt", "scMM", "multivi", "scMVP", "DAVAE", "portal")
   }
   
   lapply(tools, function(tool){
     print(tool)
     
     for (cellNumber in c("500", "10000")){
-      csv.file <- paste0("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta/dataType_", dataType, "_tool_", tool, "_cellNumber_", cellNumber,"_replicate_1.csv")
+      csv.file <- paste0("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta/dataType_", dataType, "_tool_", tool, "_cellNumber_", cellNumber,"_replicate_1.csv")
       if (cellNumber == "500"){
         pointsize <- 0.8
       } else if (cellNumber == "10000"){

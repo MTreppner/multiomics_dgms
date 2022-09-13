@@ -6,8 +6,8 @@ library(gridExtra)
 library(grid)
 
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-setwd("/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta")
-csv.files = list.files(path = "/Users/admin/Desktop/PhD/multi_omics_review/latent_and_meta", pattern = "csv$", full.names = TRUE)
+setwd("/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta")
+csv.files = list.files(path = "/Users/admin/Desktop/PhD/multi_omics_review_old/latent_and_meta", pattern = "csv$", full.names = TRUE)
 
 firstup <- function(x) {
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
