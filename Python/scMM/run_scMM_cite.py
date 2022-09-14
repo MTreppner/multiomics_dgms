@@ -17,9 +17,9 @@ import scipy.sparse as sp
 from scipy.io import mmwrite, mmread
 from scipy.sparse import csr_matrix
 import os
-#
-os.chdir('/scratch/global/maren/multiomics-data/scMM/')
-#
+
+os.chdir('/Users/imbi-mac-102/Desktop/MultimodalDataIntegration/scMM_neurips_subsamples/')
+
 parser = argparse.ArgumentParser(description='scMM Hyperparameters')
 parser.add_argument('--experiment', type=str, default='test', metavar='E',
                     help='experiment name')
@@ -87,7 +87,7 @@ args = parser.parse_args([])
 args.experiment='rna_protein'
 args.model='rna_protein'
 args.obj='m_elbo_naive_warmup'
-args.batch_size=128
+args.batch_size=200#128
 args.epochs=50 # 50
 args.deterministic_warmup=25 # 25
 args.lr=2e-3
@@ -97,8 +97,6 @@ args.r_hidden_dim=200
 args.p_hidden_dim=200
 args.learn_prior
 args.seed = 1234
-#
-# random seed
 torch.backends.cudnn.benchmark = True
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
@@ -116,13 +114,15 @@ def run(i,j):
     print('%s cells...'%j)
     # set up run path
     runId = '/%s_cells_rep_%s'%(j, rep)
-    torch.manual_seed(i*j)
-    np.random.seed(i*j)
+    args.seed = i*j
+    if j >= 5000:
+        args.lr = 2e-4
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
     experiment_dir = Path('experiments/' + args.experiment + '/csv')
     experiment_dir.mkdir(parents=True, exist_ok=True)
     runPath = str('experiments/' + args.experiment)
-    # Data
-    args.dataset_path='/data/%s_cells_rep_%s'%(j, rep)
+    args.dataset_path = '/Users/imbi-mac-102/Desktop/MultimodalDataIntegration/data/neurips-data_cite_subsamples_for_scMM/%s_cells_rep_%s'%(j, rep)
     if args.model == 'rna_atac':
         modal = 'ATAC-seq'
     elif args.model == 'rna_protein':
@@ -239,4 +239,3 @@ for i in range(10):
             with open(runPath+'/log.txt', 'a') as f: 
                 f.write('error encountered for %s cells in rep %s, skipping dataset \n \n'%(i,j))
             f.close()
-#

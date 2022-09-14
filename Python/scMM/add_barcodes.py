@@ -4,13 +4,11 @@ import numpy as np
 import pandas as pd
 import anndata
 
-#-------------------------------------------------------------------------------------------
 # RNA + ATAC-seq
-#-------------------------------------------------------------------------------------------
 
-path_to_results = "/scratch/global/maren/multiomics-data/scMM/experiments/rna_atac/"
-path_to_anndata = "/scratch/global/treppner/multi_omics_data/neurips_data/subsampled/"
-
+path_to_results = "/Users/scratch/multiomics-data/scMM_neurips_subsamples/experiments/rna_atac/"
+path_to_anndata = "/Users/multiomics-data/neurips_data/subsampled/"
+#
 for i in range(10):
     print('rep %s'%(i))
     for j in [500, 1000, 2500, 5000, 10000]:
@@ -31,13 +29,11 @@ for i in range(10):
         latent_new_df.to_csv(path_to_results + 'csv_barcodes/latent_subsample_{}_cells_rep_{}.csv'.format(j, i), sep=',', index=True)
 #
 
-#-------------------------------------------------------------------------------------------
 # CITE-seq
-#-------------------------------------------------------------------------------------------
 
-path_to_results = "/scratch/global/maren/multiomics-data/scMM/experiments/rna_protein/"
-path_to_anndata = "/scratch/global/treppner/multi_omics_data/neurips_data/subsampled/"
-
+path_to_results = "/Users/imbi-mac-102/Desktop/MultimodalDataIntegration/scMM_neurips_subsamples/experiments_smallerbatchsize/rna_protein/"
+path_to_anndata = "/Users/multiomics-data/neurips_data/subsampled/"
+#
 for i in range(10):
     print('rep %s'%(i))
     for j in [500, 1000, 2500, 5000, 10000]:
